@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Callqui Chico - Sistema de Gestión Comunal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#3b82f6',
+                        'primary-dark': '#2563eb',
+                        'secondary': '#10b981',
+                        'secondary-dark': '#059669',
+                        'dark': '#0f172a',
+                        'darker': '#020617',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'shine': 'shine 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        shine: {
+                            '0%, 100%': { opacity: '0.4' },
+                            '50%': { opacity: '0.8' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(2,6,23,0.92) 0%, rgba(15,23,42,0.95) 50%, rgba(2,6,23,0.98) 100%),
+                        url('./assets/img/fondo_callqui.jpg') center/cover no-repeat;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(59,130,246,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 60%, rgba(16,185,129,0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .glass-card {
+            background: linear-gradient(145deg, rgba(30,41,59,0.7) 0%, rgba(15,23,42,0.8) 100%);
+            border: 1px solid rgba(59,130,246,0.15);
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 25px 50px -12px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(59,130,246,0.35);
+            box-shadow: 
+                0 35px 60px -15px rgba(0,0,0,0.6),
+                0 0 40px rgba(59,130,246,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-secondary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn-secondary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-amber {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-amber::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn-amber:hover::before {
+            left: 100%;
+        }
+
+        .btn-purple {
+            background: linear-gradient(135deg, #a855f7 0%, #9333ea 50%, #7e22ce 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-purple::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn-purple:hover::before {
+            left: 100%;
+        }
+        
+        .icon-bg-purple {
+            background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(147,51,234,0.2));
+        }
+        
+        .title-gradient {
+            background: linear-gradient(135deg, #60a5fa 0%, #93c5fd 50%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .logo-glow {
+            filter: drop-shadow(0 0 30px rgba(59,130,246,0.3));
+        }
+        
+        .icon-bg {
+            background: linear-gradient(135deg, rgba(59,130,246,0.15) 0%, rgba(59,130,246,0.05) 100%);
+        }
+        
+        .icon-bg-green {
+            background: linear-gradient(135deg, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0.05) 100%);
+        }
+        
+        .floating-orbs {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: #3b82f6;
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+        
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: #10b981;
+            bottom: -50px;
+            right: -50px;
+            animation-delay: 2s;
+        }
+        
+        .orb-3 {
+            width: 200px;
+            height: 200px;
+            background: #8b5cf6;
+            top: 50%;
+            right: 20%;
+            animation-delay: 4s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+        
+        .text-gradient-subtle {
+            background: linear-gradient(to right, #94a3b8, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Partículas animadas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            display: block;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
+            animation: particleFloat 15s infinite;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="text-white flex items-center justify-center px-4 py-8 relative">
+
+    <!-- Floating Orbs Background -->
+    <div class="floating-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Partículas animadas -->
+    <div class="particles" id="particles"></div>
+
+    <div class="text-center w-full max-w-5xl relative z-10">
+        
+        <!-- Logo Container -->
+        <div class="mb-10">
+            <div class="inline-block glass-card p-5 rounded-3xl mb-8 animate-float">
+<img src="./assets/img/logo_callqui.png" alt="Callqui Chico" class="w-24 h-24 md:w-32 md:h-32 mx-auto logo-glow">
+            </div>
+            
+            <h1 class="title-gradient text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 tracking-tight">
+                CALLQUI CHICO
+            </h1>
+            <p class="text-gradient-subtle text-lg md:text-xl font-medium tracking-wide">
+                Sistema de Gestión Comunal
+            </p>
+        </div>
+
+        <!-- Cards Grid - 3 Columns -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto mb-12">
+            
+            <!-- Nueva Solicitud Card (Combined) -->
+            <div class="glass-card p-8 md:p-10 rounded-3xl transition-all duration-500 hover:-translate-y-2 cursor-pointer group" onclick="toggleSolicitudMenu()">
+                <div class="icon-bg-amber w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-file-signature text-amber-400 text-3xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-2 text-white text-center">Nueva Solicitud</h2>
+                <p class="text-slate-400 mb-4 text-sm text-center">Adjudicación, salud, educación y más</p>
+                
+                <!-- Submenu options -->
+                <div id="solicitudMenu" class="d-none">
+                    <div class="mb-2">
+                        <a href="./publico/adjudicaciones_publico.php" class="btn btn-sm w-100 text-start" style="background: rgba(245,158,11,0.2); border: 1px solid rgba(245,158,11,0.3); color: #fbbf24;">
+                            <i class="fas fa-home me-2"></i>Adjudicación de Terreno
+                        </a>
+                    </div>
+                    <div class="mb-2">
+                        <a href="./publico/solicitud_general.php" class="btn btn-sm w-100 text-start" style="background: rgba(168,85,247,0.2); border: 1px solid rgba(168,85,247,0.3); color: #c084fc;">
+                            <i class="fas fa-heartbeat me-2"></i>Salud, Educación, Otros
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login Card -->
+            <div class="glass-card p-8 md:p-10 rounded-3xl transition-all duration-500 hover:-translate-y-2 cursor-pointer group">
+                <div class="icon-bg w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-lock text-blue-400 text-3xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-2 text-white">Iniciar Sesión</h2>
+                <p class="text-slate-400 mb-6 text-sm">Panel administrativo</p>
+                <a href="login.php" 
+                   class="btn-primary text-white px-8 py-3.5 rounded-xl inline-block text-base font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/30 hover:scale-105">
+                    <span class="relative z-10">Entrar</span>
+                    <i class="fas fa-arrow-right ml-2 relative z-10"></i>
+                </a>
+            </div>
+
+            <!-- Trámite Card -->
+            <div class="glass-card p-8 md:p-10 rounded-3xl transition-all duration-500 hover:-translate-y-2 cursor-pointer group">
+                <div class="icon-bg-green w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-file-alt text-emerald-400 text-3xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-2 text-white">Consultar Trámite</h2>
+                <p class="text-slate-400 mb-6 text-sm">Verificar estado de solicitud</p>
+                <a href="./publico/tramite.php" 
+                   class="btn-secondary text-white px-8 py-3.5 rounded-xl inline-block text-base font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/30 hover:scale-105">
+                    <span class="relative z-10">Consultar</span>
+                    <i class="fas fa-search ml-2 relative z-10"></i>
+                </a>
+            </div>
+
+        </div>
+
+        <script>
+        function toggleSolicitudMenu() {
+            document.getElementById('solicitudMenu').classList.toggle('d-none');
+        }
+        </script>
+
+        <!-- Features -->
+        <div class="flex flex-wrap justify-center gap-4 md:gap-8 mb-10">
+            <div class="flex items-center gap-2 text-slate-400 text-sm">
+                <i class="fas fa-shield-alt text-blue-400"></i>
+                <span>Seguro</span>
+            </div>
+            <div class="flex items-center gap-2 text-slate-400 text-sm">
+                <i class="fas fa-bolt text-emerald-400"></i>
+                <span>Rápido</span>
+            </div>
+            <div class="flex items-center gap-2 text-slate-400 text-sm">
+                <i class="fas fa-headset text-purple-400"></i>
+                <span>Soporte 24/7</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <p class="text-slate-500 text-sm">
+            © 2026 <span class="text-slate-400 font-medium">Callqui Chico</span>. Todos los derechos reservados.
+        </p>
+
+    </div>
+
+    <!-- Script para crear partículas animadas -->
+    <script>
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const numberOfParticles = 50;
+
+            for (let i = 0; i < numberOfParticles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 5 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.bottom = '-' + (Math.random() * 20) + 'px';
+                
+                const duration = Math.random() * 10 + 10;
+                particle.style.animation = 'particleFloat ' + duration + 's linear infinite';
+                particle.style.animationDelay = (Math.random() * 5) + 's';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        window.onload = createParticles;
+    </script>
+
+</body>
+</html>
